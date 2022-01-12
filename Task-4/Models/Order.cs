@@ -1,0 +1,18 @@
+﻿namespace Task_4.Persistence.Models
+{
+    public class Order
+    {
+        public int Id { get; set; }
+        public string PurchaseDate { get; set; }
+        public decimal Amount { get; set; }
+        public int ClientId { get; set; }
+        public int ProductId { get; set; }
+        public int ManagerId { get; set; }
+        public  Client Client { get; set; }
+        public  Product Product { get; set; }
+        public   Manager Manager { get; set; }
+
+        public bool SessionCompleted { get; set; }
+
+    }
+}
