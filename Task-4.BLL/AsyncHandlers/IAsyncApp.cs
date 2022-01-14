@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task_4.BLL.Abstractions
+namespace Task_4.BLL.AsyncHandlers
 {
-    public interface IDataSourceHandler : IDisposable, IRunnable
+   public interface IAsyncApp<T>
     {
+        Task StartAsync();
     }
 }

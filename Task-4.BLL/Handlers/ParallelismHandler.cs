@@ -10,19 +10,19 @@ namespace Task_4.BLL.Handlers
     {
         public CancellationTokenSource CancellationTokenSource { get; protected set; }
         public CancellationTokenSource StopTokenSource { get; protected set; }
-        public TaskScheduler TaskScheduler { get; protected set; }
+       // public TaskScheduler TaskScheduler { get; protected set; }
         protected IProducerConsumerCollection<Task> TaskCollection { get; set; }
 
         public object SyncObj { get; } = new();
 
         public ParallelismHandler(CancellationTokenSource cancellationTokenSource,
             CancellationTokenSource stopTokenSource,
-            TaskScheduler taskScheduler,
+            //TaskScheduler taskScheduler,
             IProducerConsumerCollection<Task> tasks)
         {
             CancellationTokenSource = cancellationTokenSource;
             StopTokenSource = stopTokenSource;
-            TaskScheduler = taskScheduler;
+           // TaskScheduler = taskScheduler;
             TaskCollection = tasks;
         }
 

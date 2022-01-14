@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Task_4.BLL.Abstractions
 {
-    public interface IDataSourceHandler : IDisposable, IRunnable
+    public interface IAsyncHandler<DTOEntity> 
     {
+        Task WhenAll();
+        Task StartMainProcess();
+        Task WhenMainProcess();
     }
 }

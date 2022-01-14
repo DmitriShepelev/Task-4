@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Task_4.BLL.Abstractions.Factories
 {
-    public interface IDataSourceHandlerBuilder<DTOEntity>
-    {
-        IDataSourceHandler Build(IFileDataSource<DTOEntity> source);
-    }
+    //public interface IDataSourceHandlerBuilder<TDtoEntity>
+    //{
+    //    IDataSourceHandler Build(IFileDataSource<TDtoEntity> source);
+    //}
 }

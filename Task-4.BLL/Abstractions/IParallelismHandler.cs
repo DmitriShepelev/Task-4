@@ -12,7 +12,7 @@ namespace Task_4.BLL.Abstractions
     {
         CancellationTokenSource CancellationTokenSource { get; }
         CancellationTokenSource StopTokenSource { get; }
-        TaskScheduler TaskScheduler { get; }
+       // TaskScheduler TaskScheduler { get; }
         void Add(Task task);
         void Remove(Task task);
         Task RequestCancel();

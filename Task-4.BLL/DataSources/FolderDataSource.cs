@@ -16,9 +16,10 @@ namespace Task_4.BLL.DataSources
         private readonly AppFolderOptions _appFolderOptions;
         private readonly IDataSourceFactory<DataSourceDto> _dataSourceFactory;
 
-        public FolderDataSource(AppFolderOptions appFolderOptions)
+        public FolderDataSource(AppFolderOptions appFolderOptions, IDataSourceFactory<DataSourceDto> dataSourceFactory)
         {
             _appFolderOptions = appFolderOptions;
+            _dataSourceFactory = dataSourceFactory;
         }
 
         public IEnumerator<IFileDataSource<DataSourceDto>> GetEnumerator()
