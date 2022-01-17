@@ -22,7 +22,10 @@ namespace Task_4.BLL.DataSources
 
         private string GetManagerName()
         {
-            return _sourceFileName.Split('_')[0];
+            var x = _sourceFileName.Split('_')[0];
+            var y = x.Split('\\')[^1].ToString();
+            return y;
+
         }
 
         public void MoveToProcessed()
@@ -53,7 +56,7 @@ namespace Task_4.BLL.DataSources
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
     }
 }

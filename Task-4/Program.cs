@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
-using Task_4.Contexts;
+using Task_4.Persistence.Contexts;
 using Task_4.Persistence.Models;
 
 namespace Task_4

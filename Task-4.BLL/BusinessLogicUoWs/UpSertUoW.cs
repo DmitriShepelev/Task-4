@@ -6,9 +6,9 @@ using Task_4.DAL.Abstractions;
 
 namespace Task_4.BLL.BusinessLogicUoWs
 {
-  public  class UpsertUoW<TEntity> : BaseUoW<TEntity>, IUpsertUoW<TEntity> where TEntity : class
-  {
-      private readonly ConcurrencyLockProvider _concurrencyLock;
+    public class UpsertUoW<TEntity> : BaseUoW<TEntity>, IUpsertUoW<TEntity> where TEntity : class
+    {
+        private readonly ConcurrencyLockProvider _concurrencyLock;
         public UpsertUoW(IGenericRepository<TEntity> repository, ConcurrencyLockProvider concurrencyLock) : base(repository)
         {
             _concurrencyLock = concurrencyLock;
@@ -21,18 +21,23 @@ namespace Task_4.BLL.BusinessLogicUoWs
             {
                 locker.EnterUpgradeableReadLock();
                 var item = Repository.First(predicate);
-                if (item != null) return item;
-                try
+                if (item == null)
                 {
-                    locker.EnterWriteLock();
-                    Repository.Add(entityForInsert);
-                    Repository.Context.SaveChanges();
-                    return entityForInsert;
+                    try
+                    {
+                        locker.EnterWriteLock();
+                        Repository.Add(entityForInsert);
+                        Repository.Context.SaveChanges();
+                        return entityForInsert;
+                    }
+                    finally
+                    {
+                        locker.ExitWriteLock();
+                    }
+
                 }
-                finally
-                {
-                    locker.ExitWriteLock();
-                }
+                else return item;
+
             }
             finally
             {

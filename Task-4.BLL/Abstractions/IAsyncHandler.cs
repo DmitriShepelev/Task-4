@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Task_4.BLL.Abstractions
 {
-    public interface IAsyncHandler<DTOEntity> 
+    public interface IAsyncHandler<TDtoEntity> 
     {
+        void PendingTask(IFileDataSource<TDtoEntity> source);
         Task WhenAll();
         Task StartMainProcess();
         Task WhenMainProcess();

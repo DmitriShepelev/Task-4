@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
 using Task_4.BLL.Abstractions.Factories;
-using Task_4.BLL.DTOEntityParsers;
-using Task_4.BLL.Handlers;
 
 namespace Task_4.BLL.ProcessManagers
 {
@@ -22,7 +16,7 @@ namespace Task_4.BLL.ProcessManagers
             Provider = provider;
         }
 
-        public override void StartProcess(Action<IFileDataSource<TDtoEntity>> pendingTask)
+        public override void StartProcess(Action<IFileDataSource<TDtoEntity>> processAction)
         {
             foreach (var c in Provider)
             {
@@ -30,13 +24,13 @@ namespace Task_4.BLL.ProcessManagers
                 //{
                 //    break;
                 //}
-                pendingTask(c);
+                processAction(c);
             }
         }
 
         public virtual void Run()
         {
-            StartProcess(PendingTask);
+            StartProcess(ProcessAction);
         }
 
         //ICollection<Task> tasksList = Provider.TakeWhile(c => !CancellationTokenSource.IsCancellationRequested)

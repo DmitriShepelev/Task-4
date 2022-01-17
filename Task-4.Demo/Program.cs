@@ -1,14 +1,6 @@
 ﻿using System.Configuration;
 using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
-using Task_4.BLL.Abstractions;
-using Task_4.BLL.Abstractions.Factories;
-using Task_4.BLL.AsyncHandlers;
-using Task_4.BLL.DTOEntityParsers;
-using Task_4.BLL.Handlers;
-using Task_4.BLL.ProcessManagers;
+using Task_4.BLL.Infrastructure;
 
 namespace Task_4.Demo
 {
@@ -20,7 +12,8 @@ namespace Task_4.Demo
             //IConfiguration config = (new ConfigurationBuilder())
             //   .SetBasePath(System.IO.Directory.GetCurrentDirectory())
             //   .AddJsonFile("appsettings.json").Build();
-            
+
+            //var connection = new SqlConnection(ConfigurationManager.AppSettings.Get("ConnectionOptions"));
 
             //using (IAsyncApp app = new ConsoleClientApp(_config.GetSection("AppOptions").Get<AppOptions>()))
             //{
@@ -31,10 +24,22 @@ namespace Task_4.Demo
             //    app.StopAsync().Wait();
             //    Console.WriteLine("Stopped");
             //}
-            var app = new StartApp();
-            app.InitializeApp();
-            app.StartAsync();
 
+
+            var app = new StartApp();
+            var folderOptions = new AppFolderOptions()
+            {
+                Source = ConfigurationManager.AppSettings.Get("Source"),
+                Target = ConfigurationManager.AppSettings.Get("Target"),
+                Pattern = ConfigurationManager.AppSettings.Get("Pattern")
+            };
+            app.InitializeApp();
+            app.StartAsync().Wait();
+
+            Console.ReadKey(true);
+
+            //folderManager.Run();
+            
         }
     }
 }

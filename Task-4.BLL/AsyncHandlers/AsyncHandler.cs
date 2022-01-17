@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
@@ -10,35 +7,35 @@ using Task_4.BLL.Handlers;
 
 namespace Task_4.BLL.AsyncHandlers
 {
-    public class AsyncHandler<TDtoEntity> : IAsyncHandler<TDtoEntity>
+    public class AsyncHandler<TDtoEntity> : IAsyncHandler<TDtoEntity>, ITaskEventable<TDtoEntity>
     {
-        private readonly IProcessManager<TDtoEntity> _handler;
+        private readonly IProcessManager<TDtoEntity> _manager;
         private Task _mainProcessTask; 
-        private readonly IProducerConsumerCollection<Task> _taskCollection;
+        protected IProducerConsumerCollection<Task> TaskCollection;
 
-        public AsyncHandler(IProcessManager<TDtoEntity> handler, IProducerConsumerCollection<Task> taskCollection)
+        public AsyncHandler(IProcessManager<TDtoEntity> manager, IProducerConsumerCollection<Task> taskCollection)
         {
-            _handler = handler;
-            _taskCollection = taskCollection;
+            _manager = manager;
+            TaskCollection = taskCollection;
         }
         
 
         public void PendingTask(IFileDataSource<TDtoEntity> source)
         {
             var temp = Task.Factory.StartNew(
-                () => _handler.PendingTask(source),
+                () => _manager.ProcessAction(source),
                 CancellationToken.None,
                 TaskCreationOptions.None,
                 TaskScheduler.Default);
 
-            if (!_taskCollection.TryAdd(temp))
+            if (!TaskCollection.TryAdd(temp))
             {
                 throw new InvalidOperationException("cannot pending task");
             }
         }
         public Task WhenAll()
         {
-            return Task.WhenAll(_taskCollection);
+            return Task.WhenAll(TaskCollection);
         }
 
         public Task StartMainProcess()
@@ -48,7 +45,7 @@ namespace Task_4.BLL.AsyncHandlers
                 return Task.Factory.StartNew(
                         () => Interlocked.Exchange(
                             ref _mainProcessTask,
-                            Task.Factory.StartNew(() => _handler.StartProcess(PendingTask))))
+                            Task.Factory.StartNew(() => _manager.StartProcess(PendingTask))))
                     .ContinueWith(t => Interlocked.Exchange(ref _mainProcessTask, null));
             }
             catch (Exception e)

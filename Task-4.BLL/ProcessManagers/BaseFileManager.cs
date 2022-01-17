@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
 using Task_4.BLL.Abstractions.Factories;
 using Task_4.BLL.Handlers;
 
 namespace Task_4.BLL.ProcessManagers
 {
-    public abstract class BaseFileManager<TDtoEntity>
+    public abstract class BaseFileManager<TDtoEntity> : IProcessManager<TDtoEntity>
     {
         // protected CancellationTokenSource CancellationTokenSource { get; set; }
         // protected TaskScheduler TaskScheduler { get; set; }
@@ -30,9 +25,9 @@ namespace Task_4.BLL.ProcessManagers
         }
 
 
-        public abstract void StartProcess(Action<IFileDataSource<TDtoEntity>> pendingTask);
+        public abstract void StartProcess(Action<IFileDataSource<TDtoEntity>> processAction);
 
-        public virtual void PendingTask(IFileDataSource<TDtoEntity> source)
+        public virtual void ProcessAction(IFileDataSource<TDtoEntity> source)
         {
             //return Task.Factory.StartNew<TaskCompletionStatus>(() =>
             //{

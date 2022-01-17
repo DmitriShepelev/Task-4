@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
 
 namespace Task_4.BLL.AsyncHandlers
 {
-    public class AsyncHandlersCollection<TDtoEntity> : IAsyncHandlersCollection<TDtoEntity>
+    public class AsyncHandlersCollection<TDtoEntity> : IAsyncHandlersCollection<TDtoEntity>, ITaskEventable<TDtoEntity>
     {
-        private readonly ICollection<IAsyncHandler<TDtoEntity>> _asyncHandlers;
+        protected ICollection<IAsyncHandler<TDtoEntity>> AsyncHandlers { get; set; }
 
         public AsyncHandlersCollection()
         {
-            _asyncHandlers = new List<IAsyncHandler<TDtoEntity>>();
+            AsyncHandlers = new List<IAsyncHandler<TDtoEntity>>();
         }
 
         public IAsyncHandlersCollection<TDtoEntity> Add(IAsyncHandler<TDtoEntity> handler)
         {
-            _asyncHandlers.Add(handler);
+            AsyncHandlers.Add(handler);
             return this;
         }
 
         public Task StartAsync()
         {
-            return Task.WhenAll(_asyncHandlers.Select(x => x.StartMainProcess()));
+            return Task.WhenAll(AsyncHandlers.Select(x => x.StartMainProcess()));
         }
     }
 }

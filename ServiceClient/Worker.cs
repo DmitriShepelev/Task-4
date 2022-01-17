@@ -1,5 +1,11 @@
-﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Concurrent;
+using System.Configuration;
 using System.Data.Entity;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
 using Task_4.BLL.Abstractions.Factories;
@@ -9,21 +15,37 @@ using Task_4.BLL.Factories;
 using Task_4.BLL.Handlers;
 using Task_4.BLL.Infrastructure;
 using Task_4.BLL.ProcessManagers;
-using Task_4.Persistence.Contexts;
 using Task_4.DAL.Abstractions;
 using Task_4.DAL.ConnectionFactories;
 using Task_4.DAL.ContextFactories;
 using Task_4.DAL.RepositoryFactories;
-using System.Configuration;
-using System.IO;
+using Task_4.Persistence.Contexts;
 
-namespace Task_4.Demo
+namespace ServiceClient
 {
-    public class StartApp : IAsyncApp<DataSourceDto>
+    public class Worker : BackgroundService
     {
+        private readonly ILogger<Worker> _logger;
         private IAsyncHandlersCollection<DataSourceDto> _app;
-        public void InitializeApp()
+
+        public Worker(ILogger<Worker> logger)
         {
+            _logger = logger;
+        }
+
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            InitializeApp();
+            var startAppTask = _app.StartAsync();
+            _logger.LogInformation("Task4Service successfully running at: {time}", DateTimeOffset.Now);
+            return startAppTask;
+        }
+
+        private void InitializeApp()
+        {
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
+            Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Task4Context>());
             IConnectionFactory connectionFactory = new Task4ConnectionFactory(ConfigurationManager.AppSettings.Get("ConnectionOptions"));
             IContextFactory contextFactory = new Task4ContextFactory(connectionFactory);
@@ -70,11 +92,6 @@ namespace Task_4.Demo
             handlersCollection.Add(folderAsyncHandler);
             handlersCollection.Add(eventAsyncHandler);
             _app = handlersCollection;
-        }
-
-        public Task StartAsync()
-        {
-           return _app.StartAsync();
         }
     }
 }

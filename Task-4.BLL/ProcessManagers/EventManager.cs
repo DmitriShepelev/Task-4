@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
 using Task_4.BLL.Abstractions.Factories;
 using Task_4.BLL.Infrastructure;
 
 namespace Task_4.BLL.ProcessManagers
 {
-    public class EventManager<TDtoEntity> : BaseFileManager<TDtoEntity>, IProcessManager<TDtoEntity>
+    public class EventManager<TDtoEntity> : BaseFileManager<TDtoEntity>, IProcessManager<TDtoEntity>, IRunnable
     {
         protected IDataSourceFactory<TDtoEntity> DataSourceFactory { get; set; }
         protected Watcher Watcher;
@@ -28,7 +23,7 @@ namespace Task_4.BLL.ProcessManagers
             return this;
         }
         
-        public override void StartProcess(Action<IFileDataSource<TDtoEntity>> pendingTask)
+        public override void StartProcess(Action<IFileDataSource<TDtoEntity>> processAction)
         {
             if (Watcher is null) return;
             Watcher.Start();
@@ -37,7 +32,12 @@ namespace Task_4.BLL.ProcessManagers
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            this.PendingTask(DataSourceFactory.CreateInstance(e.FullPath));
+            ProcessAction(DataSourceFactory.CreateInstance(e.FullPath));
+        }
+
+        public void Run()
+        {
+            throw new NotImplementedException();
         }
     }
 }

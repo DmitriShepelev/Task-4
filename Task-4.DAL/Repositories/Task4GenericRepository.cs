@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Task_4.DAL.Abstractions;
 
 namespace Task_4.DAL.Repositories
@@ -34,7 +32,7 @@ namespace Task_4.DAL.Repositories
         
         public T First(Expression<Func<T, bool>> predicate)
         {
-            return predicate != null ? Context.Set<T>().FirstOrDefault(predicate) : Context.Set<T>().First();
+            return predicate != null ? Context.Set<T>().FirstOrDefault(predicate) : Context.Set<T>().FirstOrDefault();
         }
          
         public IEnumerable<T> Get(Expression<Func<T, bool>> predicate = null)
