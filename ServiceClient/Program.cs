@@ -11,22 +11,27 @@ namespace ServiceClient
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        public static IHost CreateHostBuilder(string[] args)
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            //Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+
             return Host.CreateDefaultBuilder(args)
-                .UseWindowsService()
-                .ConfigureLogging(logger=>
+                .UseWindowsService(options =>
+                {
+                    options.ServiceName = "Task4 Service";
+                })
+                .ConfigureLogging(logger =>
                     logger.AddEventLog(new EventLogSettings()
                     {
                         LogName = "Task4 Log",
                         SourceName = "Task4Service",
                         Filter = (message, level) => true
                     }))
-                .ConfigureServices((hostContext, services) => { services.AddHostedService<Worker>(); });
+                .ConfigureServices((hostContext, services) => { services.AddHostedService<Worker>(); }).Build();
         }
     }
 }

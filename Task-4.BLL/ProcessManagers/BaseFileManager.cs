@@ -9,17 +9,19 @@ namespace Task_4.BLL.ProcessManagers
     {
         // protected CancellationTokenSource CancellationTokenSource { get; set; }
         // protected TaskScheduler TaskScheduler { get; set; }
-        protected IDataSourceHandlerFactory<TDtoEntity> DataSourceHandlerFactory { get; set; }
+        //protected IDataSourceHandlerFactory<TDtoEntity> DataSourceHandlerFactory { get; set; }
+        private readonly IDataItemHandlerFactory<TDtoEntity> _dataItemHandlerFactory;
 
         //public event EventHandler<IFileDataSource<TDtoEntity>> TaskCompleted;
         //public event EventHandler<IFileDataSource<TDtoEntity>> TaskFailed;
         //public event EventHandler<IFileDataSource<TDtoEntity>> TaskInterrupted;
 
         protected BaseFileManager(
-            IDataSourceHandlerFactory<TDtoEntity>
-                    dataSourceHandlerFactory) // CancellationTokenSource tokenSource, TaskScheduler taskScheduler)
+            //IDataSourceHandlerFactory<TDtoEntity>dataSourceHandlerFactory,
+            IDataItemHandlerFactory<TDtoEntity> dataItemHandlerFactory) // CancellationTokenSource tokenSource, TaskScheduler taskScheduler)
         {
-            DataSourceHandlerFactory = dataSourceHandlerFactory;
+            //DataSourceHandlerFactory = dataSourceHandlerFactory;
+            _dataItemHandlerFactory = dataItemHandlerFactory;
             //CancellationTokenSource = tokenSource;
             //TaskScheduler = taskScheduler;
         }
@@ -34,7 +36,11 @@ namespace Task_4.BLL.ProcessManagers
 
             try
             {
-                using var handler = DataSourceHandlerFactory.CreateInstance(source);
+                using var handler = new DataSourceHandler<TDtoEntity>(
+                    source,
+                    _dataItemHandlerFactory.CreateInstance()
+                    //new DbConnectionHandler(_connectionString)
+                    );
                 handler.Run();
                 // return TaskCompletionStatus.Success;
             }

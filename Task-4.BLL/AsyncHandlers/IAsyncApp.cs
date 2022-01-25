@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿//using System.Threading.Tasks;
 
-namespace Task_4.BLL.AsyncHandlers
-{
-   public interface IAsyncApp<T>
-    {
-        Task StartAsync();
-    }
-}
+//namespace Task_4.BLL.AsyncHandlers
+//{
+//   public interface IAsyncApp<T>
+//    {
+//        Task StartAsync();
+//    }
+//}

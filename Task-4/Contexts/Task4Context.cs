@@ -1,26 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
-using Task_4.Persistence.Models;
+using Task_4.Models;
 
-namespace Task_4.Persistence.Contexts
+namespace Task_4.Contexts
 {
     public class Task4Context : DbContext
     {
-        private readonly DbConnection _connection;
-
-        public Task4Context() : base("Task4Db")
-        {
-        }
-
         public DbSet<Client> Clients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Product> Products { get; set; }
 
-        public Task4Context(DbConnection connection, bool contextOwnsConnection) : base(connection, contextOwnsConnection)
+        public Task4Context(DbConnection connection, bool contextOwnsConnection = true) : base(connection, contextOwnsConnection)
         {
-            _connection = connection;
             Database.CreateIfNotExists();
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

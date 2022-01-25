@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Task_4.Persistence.Models;
+using Task_4.Models;
 
 namespace Task_4.BLL.Infrastructure
 {
@@ -16,9 +16,9 @@ namespace Task_4.BLL.Infrastructure
         {
             _internalDictionary = new Dictionary<Type, ReaderWriterLockSlim>
             {
-                { typeof(Client), new ReaderWriterLockSlim() },
-                { typeof(Manager), new ReaderWriterLockSlim() },
-                { typeof(Product), new ReaderWriterLockSlim() }
+                { typeof(Client), _clientLocker },
+                { typeof(Manager), _managerLocker },
+                { typeof(Product), _productLocker }
             };
         }
 

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Task_4.Persistence.Models
+namespace Task_4.Models
 {
-    public class Manager
+    public sealed class Manager
     {
         public  int Id { get; set; }
         public string SecondName { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
 
         public Manager() => Orders = new HashSet<Order>();
 

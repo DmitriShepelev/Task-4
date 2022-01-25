@@ -6,37 +6,37 @@ namespace Task_4.BLL.Handlers
 {
     public class DataSourceHandler<TDto> : IDataSourceHandler
     {
-        protected IFileDataSource<TDto> DataSource { get;  }
+        protected IFileDataSource<TDto> DataSource { get; }
         protected IDataItemHandler<TDto> ItemHandler { get; }
-        protected IDbConnectionHandler DbConnectionHandler { get; }
 
         public DataSourceHandler(IFileDataSource<TDto> dataSource,
-            IDataItemHandler<TDto> itemHandler,
-            IDbConnectionHandler dbConnectionHandler)
+            IDataItemHandler<TDto> itemHandler)
         {
             DataSource = dataSource;
             ItemHandler = itemHandler;
-            DbConnectionHandler = dbConnectionHandler;
         }
-        
+
         public void Run()
         {
+            using var scope = CreateTransaction();
             try
             {
                 foreach (var order in DataSource)
                 {
                     ItemHandler.SaveOrder(order);
                 }
-
-                using var scope = CreateTransaction();
-                DbConnectionHandler.Commit(!DataSource.SessionCompleted);
+                
                 DataSource.MoveToProcessed();
-                scope.Complete();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                DbConnectionHandler.Rollback(!DataSource.SessionCompleted);
+                throw new HandlerException(e);
             }
+            finally
+            {
+                Dispose();
+            }
+            scope.Complete();
         }
 
         protected TransactionScope CreateTransaction()

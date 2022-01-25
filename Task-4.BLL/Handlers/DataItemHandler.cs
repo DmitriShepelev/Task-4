@@ -1,6 +1,6 @@
 ﻿using System;
 using Task_4.BLL.Abstractions;
-using Task_4.Persistence.Models;
+using Task_4.Models;
 
 namespace Task_4.BLL.Handlers
 {
@@ -45,14 +45,13 @@ namespace Task_4.BLL.Handlers
             OrderUoW.TakeAction(new Order()
             {
                 Amount = DtoParser.Order.Amount,
-                Client = DtoParser.Client,
-                ClientId = DtoParser.Client.Id,
-                Manager = DtoParser.Manager,
-                ManagerId = DtoParser.Manager.Id,
-                Product = DtoParser.Product,
-                ProductId = DtoParser.Product.Id,
-                PurchaseDate = DtoParser.Order.PurchaseDate,
-                SessionCompleted = false
+                Client = client,
+                ClientId = client.Id,
+                Manager = manager,
+                ManagerId = manager.Id,
+                Product = product,
+                ProductId = product.Id,
+                PurchaseDate = DtoParser.Order.PurchaseDate
             });
         }
 

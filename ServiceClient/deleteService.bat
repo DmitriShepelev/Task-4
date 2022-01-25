@@ -1,0 +1,1 @@
+sc delete "Task4 Service"

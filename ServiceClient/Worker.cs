@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
+using System.Data.Common;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,18 +17,14 @@ using Task_4.BLL.Factories;
 using Task_4.BLL.Handlers;
 using Task_4.BLL.Infrastructure;
 using Task_4.BLL.ProcessManagers;
-using Task_4.DAL.Abstractions;
-using Task_4.DAL.ConnectionFactories;
-using Task_4.DAL.ContextFactories;
-using Task_4.DAL.RepositoryFactories;
-using Task_4.Persistence.Contexts;
+using Task_4.Contexts;
 
 namespace ServiceClient
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private IAsyncHandlersCollection<DataSourceDto> _app;
+        private IAsyncHandler<DataSourceDto> _app;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -44,54 +42,61 @@ namespace ServiceClient
         private void InitializeApp()
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-
-            Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+            //Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+            var connectionString = ConfigurationManager.AppSettings.Get("ConnectionOptions");
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Task4Context>());
-            IConnectionFactory connectionFactory = new Task4ConnectionFactory(ConfigurationManager.AppSettings.Get("ConnectionOptions"));
-            IContextFactory contextFactory = new Task4ContextFactory(connectionFactory);
+            //IConnectionFactory connectionFactory = new Task4ConnectionFactory(ConfigurationManager.AppSettings.Get("ConnectionOptions"));
+            //IContextFactory contextFactory = new Task4ContextFactory(connectionFactory);
 
-            IRepositoryFactory repoFactory = new Task4RepositoryFactory();
+            //IRepositoryFactory repoFactory = new Task4RepositoryFactory();
 
-            var folderOptions = new AppFolderOptions()
+            var appOptions = new AppOptions()
             {
                 Source = ConfigurationManager.AppSettings.Get("Source"),
                 Target = ConfigurationManager.AppSettings.Get("Target"),
-                Pattern = ConfigurationManager.AppSettings.Get("Pattern")
+                Pattern = ConfigurationManager.AppSettings.Get("Pattern"),
+                ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionOptions")
             };
-            IDataSourceFactory<DataSourceDto> dataSourceFactory = new DataSourceFactory(folderOptions);
 
-            IDtoParserFactory<DataSourceDto> parserFactory = new DtoParserFactory();
+            //IDataSourceFactory<DataSourceDto> dataSourceFactory = new DataSourceFactory(appOptions);
+
+            //IDtoParserFactory<DataSourceDto> parserFactory = new DtoParserFactory();
             ConcurrencyLockProvider concurrencyLockProvider = new();
 
             IDataItemHandlerFactory<DataSourceDto> dataItemHandlerFactory =
-                new DataItemHandlerFactory(repoFactory, contextFactory, concurrencyLockProvider, parserFactory);
+                new DataItemHandlerFactory(concurrencyLockProvider, connectionString);
+            
+            //IDbConnectionHandler dbConnectionHandler =
+            //    new DbConnectionHandler(connectionString);
 
-            IDbConnectionHandler dbConnectionHandler =
-                new DbConnectionHandler(contextFactory, repoFactory, connectionFactory);
+            //IDataSourceHandlerFactory<DataSourceDto> dataSourceHandlerFactory = new DataSourceHandlerFactory(
+            //    dbConnectionHandler, dataItemHandlerFactory);
 
-            IDataSourceHandlerFactory<DataSourceDto> dataSourceHandlerFactory = new DataSourceHandlerFactory(
-                dbConnectionHandler, dataItemHandlerFactory);
-
-            var provider = new FolderDataSource(folderOptions, dataSourceFactory);
+            //var provider = new FolderDataSource(appOptions, dataSourceFactory);
 
 
             var folderManager =
-                new FolderManager<DataSourceDto>(dataSourceHandlerFactory, provider);
+                new FolderManager<DataSourceDto>(dataItemHandlerFactory, appOptions);
 
 
-            var eventManager = new EventManager<DataSourceDto>(dataSourceHandlerFactory, dataSourceFactory);
-            if (folderOptions.Source != null && folderOptions.Pattern != null)
-                eventManager.Bind(new Watcher(new FileSystemWatcher(folderOptions.Source, folderOptions.Pattern)));
+            var eventManager = new EventManager<DataSourceDto>(dataItemHandlerFactory, appOptions);
+            //if (appOptions.Source != null && appOptions.Pattern != null)
+            //    eventManager.Bind(new Watcher(new FileSystemWatcher(appOptions.Source, appOptions.Pattern)));
 
 
-            IAsyncHandler<DataSourceDto> folderAsyncHandler =
-                new AsyncHandler<DataSourceDto>(folderManager, new ConcurrentBag<Task>());
-            IAsyncHandler<DataSourceDto> eventAsyncHandler =
-                new AsyncHandler<DataSourceDto>(eventManager, new ConcurrentBag<Task>());
-            IAsyncHandlersCollection<DataSourceDto> handlersCollection = new AsyncHandlersCollection<DataSourceDto>();
-            handlersCollection.Add(folderAsyncHandler);
-            handlersCollection.Add(eventAsyncHandler);
-            _app = handlersCollection;
+            //IAsyncHandler<DataSourceDto> folderAsyncHandler =
+            //    new AsyncHandler<DataSourceDto>(folderManager, new ConcurrentBag<Task>());
+            //IAsyncHandler<DataSourceDto> eventAsyncHandler =
+            //    new AsyncHandler<DataSourceDto>(eventManager, new ConcurrentBag<Task>());
+            //IAsyncHandlersCollection<DataSourceDto> handlersCollection = new AsyncHandlersCollection<DataSourceDto>();
+            //handlersCollection.Add(eventAsyncHandler);
+            //handlersCollection.Add(folderAsyncHandler);
+
+            IAsyncHandler<DataSourceDto> asyncHandler = new AsyncHandler<DataSourceDto>();
+            asyncHandler.Add(folderManager);
+            asyncHandler.Add(eventManager);
+
+            _app = asyncHandler;
         }
     }
 }

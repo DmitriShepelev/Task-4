@@ -1,4 +1,4 @@
-﻿namespace Task_4.Persistence.Models
+﻿namespace Task_4.Models
 {
     public class Order
     {
@@ -11,8 +11,5 @@
         public  Client Client { get; set; }
         public  Product Product { get; set; }
         public   Manager Manager { get; set; }
-
-        public bool SessionCompleted { get; set; }
-
     }
 }
