@@ -1,9 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
+using Task_4.BLL.Infrastructure;
 
 namespace ServiceClient
 {
@@ -17,9 +19,13 @@ namespace ServiceClient
         public static IHost CreateHostBuilder(string[] args)
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-            //Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
 
             return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, builder) =>
+                {
+                    builder.AddJsonFile("appsettings.json", true, true);
+                    builder.AddJsonFile($"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json", true, true);
+                })
                 .UseWindowsService(options =>
                 {
                     options.ServiceName = "Task4 Service";
@@ -28,10 +34,13 @@ namespace ServiceClient
                     logger.AddEventLog(new EventLogSettings()
                     {
                         LogName = "Task4 Log",
-                        SourceName = "Task4Service",
-                        Filter = (_, _) => true
+                        SourceName = "Task4 Service",
                     }))
-                .ConfigureServices(services => { services.AddHostedService<Worker>(); }).Build();
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<Worker>();
+                    services.Configure<AppOptions>(hostContext.Configuration.GetSection("AppOptions"));
+                }).Build();
         }
     }
 }

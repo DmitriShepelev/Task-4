@@ -1,1 +1,1 @@
-sc create "Task4 Service" binpath="d:\EpamLearn\source\repos\Task-4\ServiceClient\bin\Debug\publish\Task-4.Client.exe"
+sc create "Task4 Service" binpath="d:\EpamLearn\source\repos\Task-4\ServiceClient\bin\Release\publish\Task-4.Client.exe"

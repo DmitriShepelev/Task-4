@@ -5,6 +5,6 @@
         public string Source { get; set; }
         public string Target { get; set; }
         public string Pattern { get; set; }
-        public string ConnectionString { get; set; }
+        public string ConnectionOptions { get; set; }
     }
 }

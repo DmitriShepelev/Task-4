@@ -16,8 +16,10 @@ namespace Task_4.BLL.ProcessManagers
         private readonly ManualResetEvent _stopThreadEvent = new(false);
         public EventManager(IDataItemHandlerFactory<TDtoEntity> dataItemHandlerFactory, AppOptions appOptions) : base(dataItemHandlerFactory)
         {
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             _appOptions = appOptions;
             _watcher = new FileSystemWatcher(_appOptions.Source, _appOptions.Pattern);
+            //_watcher = watcher;
             _watcher.Created += Watcher_Created;
         }
         

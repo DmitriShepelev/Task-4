@@ -45,7 +45,8 @@ namespace Task_4.BLL.Handlers
                     () => manager.ProcessAction(x),
                         CancellationToken.None,
                         TaskCreationOptions.None,
-                        TaskScheduler.Default);
+                        TaskScheduler.Default
+                    );
 
                 var temp = Task.Factory.StartNew(() => { manager.StartProcess(PendingTask); });
                 if (!TaskCollection.TryAdd(temp))

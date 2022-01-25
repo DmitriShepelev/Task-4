@@ -42,13 +42,15 @@ namespace Task_4.BLL.ProcessManagers
 
                 handler.Run();
             }
-            catch (HandlerException)
+            catch (HandlerException exception)
             {
                 status = TaskCompletionStatus.Failed;
+                Console.WriteLine(exception);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 status = TaskCompletionStatus.Failed;
+                Console.WriteLine(exception);
             }
             Callback(status, source);
         }

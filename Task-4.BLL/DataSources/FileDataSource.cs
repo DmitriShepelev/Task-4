@@ -52,7 +52,6 @@ namespace Task_4.BLL.DataSources
             var x = _sourceFileName.Split('_')[0];
             var y = x.Split('\\')[^1];
             return y;
-
         }
 
         IEnumerator IEnumerable.GetEnumerator()
