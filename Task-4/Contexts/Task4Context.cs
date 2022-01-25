@@ -7,11 +7,6 @@ namespace Task_4.Contexts
 {
     public class Task4Context : DbContext
     {
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Manager> Managers { get; set; }
-        public DbSet<Product> Products { get; set; }
-
         public Task4Context(DbConnection connection, bool contextOwnsConnection = true) : base(connection, contextOwnsConnection)
         {
             Database.CreateIfNotExists();

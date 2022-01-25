@@ -1,19 +1,12 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Concurrent;
 using System.Configuration;
-using System.Data.Common;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Task_4.BLL.Abstractions;
-using Task_4.BLL.Abstractions.Factories;
-using Task_4.BLL.AsyncHandlers;
-using Task_4.BLL.DataSources;
-using Task_4.BLL.Factories;
 using Task_4.BLL.Handlers;
 using Task_4.BLL.Infrastructure;
 using Task_4.BLL.ProcessManagers;
@@ -34,6 +27,9 @@ namespace ServiceClient
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             InitializeApp();
+            _app.TaskFailed += (_, ds) => _logger.LogInformation($"Task on file {ds.FileName} failed");
+            _app.TaskCompleted += (_, ds) => _logger.LogInformation($"Task on file {ds.FileName} completed");
+
             var startAppTask = _app.StartAsync();
             _logger.LogInformation("Task4Service successfully running at: {time}", DateTimeOffset.Now);
             return startAppTask;

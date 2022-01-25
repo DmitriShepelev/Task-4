@@ -1,7 +1,8 @@
 ﻿using Task_4.BLL.Abstractions;
+using Task_4.BLL.Infrastructure;
 using Task_4.Models;
 
-namespace Task_4.BLL.DTOEntityParsers
+namespace Task_4.BLL.DataSources
 {
   public  class DtoParser : IDtoParser<DataSourceDto>
     {

@@ -2,11 +2,9 @@
 
 namespace Task_4.BLL.Abstractions
 {
-    // источник данных
-    public interface IFileDataSource<DTOEntity> : IEnumerable<DTOEntity>
+    public interface IFileDataSource<TDtoEntity> : IEnumerable<TDtoEntity>
     {
-        // операция перемещения обработанных файлов
         void MoveToProcessed();
-        bool SessionCompleted { get; }
+        string FileName { get; }
     }
 }

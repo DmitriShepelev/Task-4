@@ -1,4 +1,4 @@
-﻿namespace Task_4.BLL.Abstractions.Factories
+﻿namespace Task_4.BLL.Abstractions
 {
     public interface IDataItemHandlerFactory<TDtoEntity>
     {

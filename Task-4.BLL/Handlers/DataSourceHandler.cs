@@ -9,8 +9,7 @@ namespace Task_4.BLL.Handlers
         protected IFileDataSource<TDto> DataSource { get; }
         protected IDataItemHandler<TDto> ItemHandler { get; }
 
-        public DataSourceHandler(IFileDataSource<TDto> dataSource,
-            IDataItemHandler<TDto> itemHandler)
+        public DataSourceHandler(IFileDataSource<TDto> dataSource, IDataItemHandler<TDto> itemHandler)
         {
             DataSource = dataSource;
             ItemHandler = itemHandler;

@@ -29,9 +29,9 @@ namespace ServiceClient
                     {
                         LogName = "Task4 Log",
                         SourceName = "Task4Service",
-                        Filter = (message, level) => true
+                        Filter = (_, _) => true
                     }))
-                .ConfigureServices((hostContext, services) => { services.AddHostedService<Worker>(); }).Build();
+                .ConfigureServices(services => { services.AddHostedService<Worker>(); }).Build();
         }
     }
 }

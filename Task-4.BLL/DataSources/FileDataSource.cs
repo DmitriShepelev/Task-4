@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using ChinhDo.Transactions;
 using Task_4.BLL.Abstractions;
+using Task_4.BLL.Infrastructure;
 
 namespace Task_4.BLL.DataSources
 {
@@ -12,7 +13,6 @@ namespace Task_4.BLL.DataSources
         private readonly string _sourceFileName;
         private readonly string _targetPath;
         private readonly TxFileManager _fileManager = new();
-        public bool SessionCompleted => false;
 
         public FileDataSource(string sourceFileName, string targetPath)
         {
@@ -23,10 +23,10 @@ namespace Task_4.BLL.DataSources
         public void MoveToProcessed()
         {
             var target = string.Concat(_targetPath, Path.GetFileName(_sourceFileName));
-            //if (_sourceFileName != null) File.Move(_sourceFileName, target);
             _fileManager.Move(_sourceFileName, target);
-            //Console.WriteLine($"{_sourceFileName} moved to target");
         }
+
+        public string FileName  => _sourceFileName.Split('\\')[^1];
 
         public IEnumerator<DataSourceDto> GetEnumerator()
         {
@@ -50,7 +50,7 @@ namespace Task_4.BLL.DataSources
         private string GetManagerName()
         {
             var x = _sourceFileName.Split('_')[0];
-            var y = x.Split('\\')[^1].ToString();
+            var y = x.Split('\\')[^1];
             return y;
 
         }

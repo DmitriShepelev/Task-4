@@ -1,4 +1,4 @@
-﻿namespace Task_4.BLL.Abstractions
+﻿namespace Task_4.BLL.Infrastructure
 {
     public class DataSourceDto
     {
