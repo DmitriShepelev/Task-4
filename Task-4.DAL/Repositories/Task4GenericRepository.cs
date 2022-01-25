@@ -9,7 +9,6 @@ namespace Task_4.DAL.Repositories
 {
     public class Task4GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        // переделать реализацию IDisposable
         protected DbContext Context;
         private bool _disposedValue;
 
@@ -47,7 +46,6 @@ namespace Task_4.DAL.Repositories
 
         public void Remove(T item)
         {
-            //Context.Entry(item).State = EntityState.Modified;
             Context.Set<T>().Remove(item);
         }
 
@@ -58,7 +56,6 @@ namespace Task_4.DAL.Repositories
 
         public void Update(T item)
         {
-            //var entry = Context.Entry<T>(item);
             Context.Entry(item).State = EntityState.Modified;
         }
 
@@ -67,26 +64,15 @@ namespace Task_4.DAL.Repositories
             if (_disposedValue) return;
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
                 Context.Dispose();
                 Context = null;
             }
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
             _disposedValue = true;
         }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~Task4GenericRepository()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
+        
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
