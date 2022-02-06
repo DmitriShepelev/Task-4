@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Data.Entity;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +39,7 @@ namespace ServiceClient
         private void InitializeApp()
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Task4Context>());
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationContext>());
             
             ConcurrencyLockProvider concurrencyLockProvider = new();
 

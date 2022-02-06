@@ -1,0 +1,35 @@
+﻿@using System.Globalization
+@model AllOrdersViewModel
+@{
+    ViewData["Title"] = "Список сделок";
+    //Layout = null;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Список сделок</h1>
+</div>
+<br />
+
+@{await Html.RenderPartialAsync("OrdersPartialView", Model);}
+
+@*<table width="100%">
+    <tr>
+        <td>Клиент</td>
+        <td>Менеджер</td>
+        <td>Товар</td>
+        <td>Сумма</td>
+        <td>Дата</td>
+        <td></td>
+    </tr>
+
+    @foreach (var order in Model.Orders)
+    {
+    <tr>
+        <td>@order.Client.Name</td>
+        <td>@order.Manager.SecondName</td>
+        <td>@order.Product.Name</td>
+        <td>@order.Amount.ToString(CultureInfo.InvariantCulture)</td>
+        <td>@order.PurchaseDate</td>
+    </tr>
+    }
+</table>*@

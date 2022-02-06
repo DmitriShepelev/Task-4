@@ -42,7 +42,7 @@ namespace Task_4.BLL.Handlers
                 new Manager() { SecondName = DtoParser.Manager.SecondName }
             );
 
-            OrderUoW.TakeAction(new Order()
+            var order = new Order()
             {
                 Amount = DtoParser.Order.Amount,
                 Client = client,
@@ -52,7 +52,8 @@ namespace Task_4.BLL.Handlers
                 Product = product,
                 ProductId = product.Id,
                 PurchaseDate = DtoParser.Order.PurchaseDate
-            });
+            };
+            OrderUoW.TakeAction(order);
         }
 
         protected virtual void Dispose(bool disposing)

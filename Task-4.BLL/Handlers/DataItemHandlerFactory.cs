@@ -22,12 +22,12 @@ namespace Task_4.BLL.Handlers
 
         public IDataItemHandler<DataSourceDto> CreateInstance()
         {
-            var context = new Task4Context(new SqlConnection(_connectionString));
+            var context = new ApplicationContext();
             
-            var clientRepo = new Task4GenericRepository<Client>(context);
-            var managerRepo = new Task4GenericRepository<Manager>(context);
-            var productRepo = new Task4GenericRepository<Product>(context);
-            var orderRepo = new Task4GenericRepository<Order>(context);
+            var clientRepo = new GenericRepository<Client>(context);
+            var managerRepo = new GenericRepository<Manager>(context);
+            var productRepo = new GenericRepository<Product>(context);
+            var orderRepo = new GenericRepository<Order>(context);
             return new DataItemHandler<DataSourceDto>(new DtoParser(),
                 new UpsertUoW<Client>(clientRepo, ConcurrencyLock),
                 new UpsertUoW<Manager>(managerRepo, ConcurrencyLock),

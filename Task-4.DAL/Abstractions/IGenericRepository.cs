@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Task_4.DAL.Abstractions
 {

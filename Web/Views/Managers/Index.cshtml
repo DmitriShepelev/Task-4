@@ -1,0 +1,24 @@
+﻿@using System.Globalization
+@model ManagerOrdersViewModel
+@{
+    ViewData["Title"] = "Список продаж";
+    //Layout = null;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Список продаж менеджеров</h1>
+</div>
+<br />
+<form class="form-inline">
+    <label>Выберите менеджера:</label>
+    <select name="managerId" class="form-control">
+        @foreach (var manager in Model.Managers)
+        {
+            <option value="@manager.Id">@manager.SecondName</option>
+        }
+    </select>
+    <input type="submit" />
+</form>
+<br />
+
+@{await Html.RenderPartialAsync("OrdersPartialView", Model);}

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>dotnet-ServiceClient-0E76D870-8FA0-4F9F-B5F7-2C9451556B09</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Task-4.BLL\Task-4.BLL.csproj" />
+    <ProjectReference Include="..\Task-4.DAL\Task-4.DAL.csproj" />
+    <ProjectReference Include="..\Task-4\Task-4.Persistence.csproj" />
+  </ItemGroup>
+</Project>

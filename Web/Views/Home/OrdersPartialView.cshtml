@@ -1,0 +1,24 @@
+﻿@using System.Globalization
+@model AllOrdersViewModel
+
+<table width="100%">
+    <tr>
+        <td>Дата</td>
+        <td>Менеджер</td>
+        <td>Клиент</td>
+        <td>Товар</td>
+        <td>Сумма</td>
+        <td></td>
+    </tr>
+
+    @foreach (var order in Model.Orders)
+    {
+        <tr>
+            <td>@order.PurchaseDate</td>
+            <td>@order.Manager.SecondName</td>
+            <td>@order.Client.Name</td>
+            <td>@order.Product.Name</td>
+            <td>@order.Amount.ToString(CultureInfo.InvariantCulture)</td>
+        </tr>
+    }
+</table>

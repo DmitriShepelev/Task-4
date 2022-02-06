@@ -5,7 +5,7 @@ using Task_4.Models;
 
 namespace Task_4.BLL.Infrastructure
 {
-    public class ConcurrencyLockProvider : IDisposable
+    public class ConcurrencyLockProvider 
     {
         private readonly ReaderWriterLockSlim _clientLocker = new();
         private readonly ReaderWriterLockSlim _managerLocker = new();
@@ -25,15 +25,6 @@ namespace Task_4.BLL.Infrastructure
         public ReaderWriterLockSlim GetLock<TEntity>() where TEntity : class
         {
             return _internalDictionary[typeof(TEntity)];
-        }
-
-        public void Dispose()
-        {
-            _clientLocker?.Dispose();
-            _managerLocker?.Dispose();
-            _productLocker?.Dispose();
-
-            GC.SuppressFinalize(this);
         }
     }
 }

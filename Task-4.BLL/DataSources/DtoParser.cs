@@ -6,6 +6,8 @@ namespace Task_4.BLL.DataSources
 {
   public  class DtoParser : IDtoParser<DataSourceDto>
     {
+        private const int FirstNameIndex = 0;
+        private const int LastNameIndex = 1;
         public Client Client { get; set; }
         public Product Product { get; set; }
         public Manager Manager { get; set; }
@@ -13,7 +15,7 @@ namespace Task_4.BLL.DataSources
         public void Parse(DataSourceDto item)
         {
             var name = item.ClientName.Split(" ");
-            Client = new Client() {FirstName = name[0], LastName = name[1]};
+            Client = new Client() {FirstName = name[FirstNameIndex], LastName = name[LastNameIndex] };
             Product = new Product(){Name = item.ProductName};
             Manager = new Manager() {SecondName = item.ManagerSecondName};
             Order = new Order()

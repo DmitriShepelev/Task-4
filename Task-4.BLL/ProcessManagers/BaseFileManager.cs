@@ -65,8 +65,6 @@ namespace Task_4.BLL.ProcessManagers
                 case TaskCompletionStatus.Failed:
                     OnTaskFailed(this, source);
                     break;
-                default:
-                    throw new HandlerException(new ArgumentOutOfRangeException(nameof(status), status, null));
             }
         }
     }

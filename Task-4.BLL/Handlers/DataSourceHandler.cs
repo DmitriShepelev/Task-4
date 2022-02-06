@@ -29,7 +29,7 @@ namespace Task_4.BLL.Handlers
             }
             catch (Exception e)
             {
-                throw new HandlerException(e);
+                throw new HandlerException(e, e.Message);
             }
             finally
             {
