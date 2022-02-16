@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Task_4.Models;
+using System.Linq;
+using Task_4.DAL.Models;
 
 namespace Web.Models
 {
@@ -7,5 +8,8 @@ namespace Web.Models
     {
         public IEnumerable<Manager> Managers { get; set; }
         public IEnumerable<Order> Orders { get; set; }
+        public PageViewModel PageViewModel { get; set; }
+        public FilterViewModel FilterViewModel { get; set; }
+        public SortViewModel SortViewModel { get; set; }
     }
 }

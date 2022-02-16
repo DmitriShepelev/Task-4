@@ -1,57 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task_4.Contexts;
+using Task_4.BLL.Services;
+using Task_4.DAL.Contexts;
 using Task_4.DAL.Repositories;
-using Task_4.Models;
+using Task_4.DAL.Models;
 using Web.Models;
-using Client = Task_4.Models.Client;
+using Client = Task_4.DAL.Models.Client;
 
 namespace Web.Controllers.Clients
 {
     public class ClientsController : Controller
     {
-        public IActionResult Index(int? clientId)
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> Index(int? managerId, int? clientId, int? productId,
+            int page = 1, SortState sortOrder = SortState.PurchaseDateDesc)
         {
-            IEnumerable<Order> orders;
-            IEnumerable<Task_4.Models.Client> clients;
+            var service = new ClientService();
+            var result = await service.GetOrders(managerId, clientId, productId, page, sortOrder);
 
-            using (var context = new ApplicationContext())
+            if (clientId is null)
             {
-                context.Set<Order>()
-                    .Include(order => order.Client)
-                    .Include(order => order.Manager)
-                    .Include(order => order.Product)
-                    .Load();
-
-                orders = new GenericRepository<Order>(context)
-                    .Get()
-                    .OrderBy(order => order.Client.LastName)
-                    .ToList();
-
-                clients = new GenericRepository<Client>(context)
-                    .Get()
-                    .ToList();
+                return View("GetClientId", service.Clients);
             }
 
-            var clientsModel = clients.Select(client => new Models.Client { Id = client.Id, Name = client.Name }).ToList();
-            clientsModel.Insert(0, new Models.Client() { Id = 0, Name = "Все" });
-
-            var orderViewModel = new ClientOrdersViewModel()
+            ClientOrdersViewModel viewModel = new()
             {
-                Clients = clientsModel, 
-                //Managers = managersModels,
-                //Products = products, 
-                Orders = orders
+                PageViewModel = new PageViewModel(service.Count, page, service.PageSize),
+                SortViewModel = new SortViewModel(sortOrder),
+                FilterViewModel = new FilterViewModel(
+                    service.Clients, clientId,
+                    service.Products, productId,
+                    service.Managers, managerId),
+                Orders = result,
+                Clients = service.Clients
             };
 
-            if (clientId != null && clientId > 0)
-            {
-                orderViewModel.Orders = orders.Where(order => order.Client.Id == clientId);
-            }
-
-            return View(orderViewModel);
+            return View(viewModel);
         }
     }
 }

@@ -1,56 +1,73 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task_4.Contexts;
+using Task_4.BLL.Services;
+using Task_4.DAL.Contexts;
 using Task_4.DAL.Repositories;
-using Task_4.Models;
+using Task_4.DAL.Models;
 using Web.Models;
-using Manager = Web.Models.Manager;
 
 namespace Web.Controllers.Managers
 {
     public class ManagersController : Controller
     {
-        public IActionResult Index(int? managerId)
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> Index(int? managerId, int? clientId, int? productId,
+            int page = 1, SortState sortOrder = SortState.PurchaseDateDesc)
         {
-            IEnumerable<Order> orders;
-            IEnumerable<Task_4.Models.Manager> managers;
+            var service = new ManagerService();
+            var result = await service.GetOrders(managerId, clientId, productId, page, sortOrder);
 
-            using (var context = new ApplicationContext())
+            if (managerId is null)
             {
-                context.Set<Order>()
-                    .Include(order => order.Client)
-                    .Include(order => order.Manager)
-                    .Include(order => order.Product)
-                    .Load();
-
-                orders = new GenericRepository<Order>(context)
-                    .Get()
-                    .OrderByDescending(date => date.PurchaseDate)
-                    .ToList();
-
-                managers = new GenericRepository<Task_4.Models.Manager>(context)
-                    .Get()
-                    .ToList();
+                return View("GetManagerId", service.Managers);
             }
 
-            var managersModels = managers.Select(m => new Manager { Id = m.Id, SecondName = m.SecondName }).ToList();
-            managersModels.Insert(0, new Manager { Id = 0, SecondName = "Все" });
-            var orderViewModel = new ManagerOrdersViewModel()
+            ManagerOrdersViewModel viewModel = new()
             {
-                //Clients = clients, 
-                Managers = managersModels,
-                //Products = products, 
-                Orders = orders
+                PageViewModel = new PageViewModel(service.Count, page, service.PageSize),
+                SortViewModel = new SortViewModel(sortOrder),
+                FilterViewModel = new FilterViewModel(
+                    service.Clients, clientId,
+                    service.Products, productId,
+                    service.Managers, managerId),
+                Orders = result,
+                Managers = service.Managers
             };
 
-            if (managerId != null && managerId > 0)
-            {
-                orderViewModel.Orders = orders.Where(order => order.Manager.Id == managerId);
-            }
+            return View(viewModel);
+        }
 
-            return View(orderViewModel);
+        public IActionResult EditOrder(int? orderId)
+        {
+            if (orderId is null)
+                return RedirectToAction("Index");
+            ViewBag.OrderId = orderId;
+            return View();
+        }
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> EditOrder(OrderModel order)
+        {
+            if (ModelState.IsValid)
+            {
+                var dalOrders = await new OrderRepository().GetOrderByIdAsync(order.Id);
+                dalOrders.Manager.SecondName = order.Manager;
+                dalOrders.Client.LastName = order.Client;
+                dalOrders.Product.Name = order.Product;
+                dalOrders.PurchaseDate = order.PurchaseDate;
+                dalOrders.Amount = Convert.ToDecimal(order.Amount);
+                await new OrderRepository().UpdateAsync(dalOrders);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(order);
+            }
         }
     }
 }

@@ -1,0 +1,46 @@
+﻿@model OrderModel
+@{
+    ViewData["Title"] = "Редактирование заказа";
+}
+
+<form asp-antiforgery="true" asp-action="EditOrder" asp-controller="Managers">
+    <div>
+        <div class="table" asp-validation-summary="ModelOnly"></div>
+        <input type="hidden" value="@ViewBag.OrderId" name="Id" />
+        <div>
+            <label asp-for="PurchaseDate"></label><br />
+            <input type="text" asp-for="PurchaseDate" />
+            <span asp-validation-for="PurchaseDate"></span>
+        </div>
+        <div>
+            <label asp-for="Manager"></label><br />
+            <input asp-for="Manager" />
+            <span asp-validation-for="Manager"></span>
+        </div>
+        <div>
+            <label asp-for="Client"></label><br />
+            <input asp-for="Client" />
+            <span asp-validation-for="Client"></span>
+        </div>
+        <div>
+            <label asp-for="Product"></label><br />
+            <input asp-for="Product" />
+            <span asp-validation-for="Product"></span>
+        </div>
+        <div>
+            <label asp-for="Amount"></label><br />
+            <input asp-for="Amount" />
+            <span asp-validation-for="Amount"></span>
+        </div>
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    </div>
+</form>
+
+
+@section scripts{
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

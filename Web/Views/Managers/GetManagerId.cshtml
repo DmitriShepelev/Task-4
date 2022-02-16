@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Task_4.DAL.Models.Manager>
+@{
+    ViewData["Title"] = "Список менеджеров";
+}
+<div class="text-center">
+    <h1 class="display-4">Список менеджеров</h1>
+</div>
+<br />
+
+<table class="table">
+    @foreach (var manager in Model)
+    {
+        <tr>
+            <td><a asp-controller="Managers" asp-action="Index" asp-route-managerId="@manager.Id">@manager.SecondName</a></td>
+        </tr>
+    }
+</table>

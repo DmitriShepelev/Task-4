@@ -1,36 +1,97 @@
-﻿@using System.Globalization
-@model ProductOrdersViewModel
+﻿@model ProductOrdersViewModel
 @{
     ViewData["Title"] = "Список продаж";
-    //Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Список продаж товаров</h1>
-</div>
-<br />
-<form class="form-inline">
-    <label>Выберите товар:</label>
-    <select name="productsId" class="form-control">
-        @foreach (var product in Model.Products)
-        {
-            <option value="@product.Id">@product.Name</option>
-        }
-    </select>
-    <input type="submit" id="confirm" />
+<form method="get">
+    <div class="form-inline">
+        <label>Менеджер: </label>
+        <select name="managerId" asp-items="Model.FilterViewModel.Managers" class="form-control"></select>
+        <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
+
+        <label>Клиент: </label>
+        <select name="clientId" asp-items="Model.FilterViewModel.Clients" class="form-control"></select>
+        <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
+
+        <label>Товар: </label>
+        <select name="productId" asp-items="Model.FilterViewModel.Products" class="form-control"></select>
+        <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
+    </div>
 </form>
-<br />
-<div id="results"></div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#confirm').click(function (e) {
-            e.preventDefault();
-            var name = $('#productsId').val();
-            name = encodeURIComponent(name);
-            $('#results').load("http://localhost:51805/Home/BookSearch?name=" + name);
-        });
-    });
-</script>
+<table class="table">
+    <tr>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.PurchaseDateSort)"
+               asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+               asp-route-clientId="@Model.FilterViewModel.SelectedClient"
+               asp-route-productId="@(Model.FilterViewModel.SelectedProduct)">Дата</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.ManagerNameSort)"
+               asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+               asp-route-clientId="@Model.FilterViewModel.SelectedClient"
+               asp-route-productId="@(Model.FilterViewModel.SelectedProduct)">Менеджер</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.ClientNameSort)"
+               asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+               asp-route-clientId="@Model.FilterViewModel.SelectedClient"
+               asp-route-productId="@(Model.FilterViewModel.SelectedProduct)">Клиент</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.ProductNameSort)"
+               asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+               asp-route-clientId="@Model.FilterViewModel.SelectedClient"
+               asp-route-productId="@(Model.FilterViewModel.SelectedProduct)">Товар</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.AmountSort)"
+               asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+               asp-route-clientId="@Model.FilterViewModel.SelectedClient"
+               asp-route-productId="@(Model.FilterViewModel.SelectedProduct)">Сумма</a>
+        </th>
+    </tr>
 
-@{await Html.RenderPartialAsync("OrdersPartialView", Model);}
+    @{await Html.RenderPartialAsync("OrdersPartialView", Model);}
+
+</table>
+
+<page-link page-model="Model.PageViewModel" page-action="Index"
+           page-url-managerId="@Model.FilterViewModel.SelectedManager"
+           page-url-clientId="@(Model.FilterViewModel.SelectedClient)"
+           page-url-productId="@(Model.FilterViewModel.SelectedProduct)"
+           page-url-sortOrder="@(Model.SortViewModel.Current)"></page-link>
+
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+       asp-route-clientId="@(Model.FilterViewModel.SelectedClient)"
+       asp-route-productId="@(Model.FilterViewModel.SelectedProduct)"
+       asp-route-sortOrder="@(Model.SortViewModel.Current)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-managerId="@(Model.FilterViewModel.SelectedManager)"
+       asp-route-clientId="@(Model.FilterViewModel.SelectedClient)"
+       asp-route-productId="@(Model.FilterViewModel.SelectedProduct)"
+       asp-route-sortOrder="@(Model.SortViewModel.Current)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-right"></i>
+        Вперед
+    </a>
+}

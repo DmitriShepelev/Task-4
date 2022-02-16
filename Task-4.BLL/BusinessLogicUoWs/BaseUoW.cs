@@ -17,7 +17,7 @@ namespace Task_4.BLL.BusinessLogicUoWs
         {
             if (_disposedValue) return;
             if (!disposing) return;
-            Repository?.Dispose(); 
+            Repository?.Dispose();
             Repository = null;
             _disposedValue = true;
         }

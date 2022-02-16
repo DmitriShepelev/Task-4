@@ -1,4 +1,4 @@
-﻿using Task_4.Models;
+﻿using Task_4.DAL.Models;
 
 namespace Task_4.BLL.Abstractions
 {

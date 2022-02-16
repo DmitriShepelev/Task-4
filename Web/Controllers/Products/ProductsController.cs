@@ -1,56 +1,44 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Task_4.Contexts;
+using Task_4.BLL.Services;
+using Task_4.DAL.Contexts;
 using Task_4.DAL.Repositories;
-using Task_4.Models;
+using Task_4.DAL.Models;
 using Web.Models;
-using Product = Web.Models.Product;
 
 namespace Web.Controllers.Products
 {
     public class ProductsController : Controller
     {
-        public IActionResult Index(int? productsId)
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> Index(int? managerId, int? clientId, int? productId,
+            int page = 1, SortState sortOrder = SortState.PurchaseDateDesc)
         {
-            IEnumerable<Order> orders;
-            IEnumerable<Task_4.Models.Product> products;
+            var service = new ProductService();
+            var result = await service.GetOrders(managerId, clientId, productId, page, sortOrder);
 
-            using (var context = new ApplicationContext())
+            if (productId is null)
             {
-                context.Set<Order>()
-                    .Include(order => order.Client)
-                    .Include(order => order.Manager)
-                    .Include(order => order.Product)
-                    .Load();
-
-                orders = new GenericRepository<Order>(context)
-                    .Get()
-                    .OrderByDescending(date => date.PurchaseDate)
-                    .ToList();
-
-                products = new GenericRepository<Task_4.Models.Product>(context)
-                    .Get()
-                    .ToList();
+                return View("GetProductId", service.Products);
             }
 
-            var productsModels = products.Select(product => new Product { Id = product.Id, Name = product.Name }).ToList();
-            productsModels.Insert(0, new Product { Id = 0, Name = "Все" });
-            var orderViewModel = new ProductOrdersViewModel()
+            ProductOrdersViewModel viewModel = new()
             {
-                //Clients = clients, 
-                //Managers = productsModels,
-                Products = productsModels, 
-                Orders = orders
+                PageViewModel = new PageViewModel(service.Count, page, service.PageSize),
+                SortViewModel = new SortViewModel(sortOrder),
+                FilterViewModel = new FilterViewModel(
+                    service.Clients, clientId,
+                    service.Products, productId,
+                    service.Managers, managerId),
+                Orders = result,
+                Products = service.Products
             };
 
-            if (productsId != null && productsId > 0)
-            {
-                orderViewModel.Orders = orders.Where(order => order.Product.Id == productsId);
-            }
-
-            return View(orderViewModel);
+            return View(viewModel);
         }
     }
 }

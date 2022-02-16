@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Task_4.DAL.Models.Product>
+@{
+    ViewData["Title"] = "Список товаров";
+}
+<div class="text-center">
+    <h1 class="display-4">Список товаров</h1>
+</div>
+<br />
+
+<table class="table">
+    @foreach (var product in Model)
+    {
+        <tr>
+            <td><a asp-controller="Products" asp-action="Index" asp-route-productId="@product.Id">@product.Name</a></td>
+        </tr>
+    }
+</table>

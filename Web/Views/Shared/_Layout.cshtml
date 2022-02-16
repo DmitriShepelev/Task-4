@@ -19,13 +19,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Managers" asp-action="Index">Managers</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Managers" asp-action="Index">Менеджеры</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Клиенты</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Товары</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Пользователи и роли</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -35,6 +38,31 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <style>
+                @@font-face {
+                    font-family: 'FontAwesome';
+                    src: url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2') format('woff2'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/fonts/fontawesome-webfont.woff') format('woff'), url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/fonts/fontawesome-webfont.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal
+                }
+
+                .glyphicon {
+                    display: inline-block;
+                    font: normal normal normal 14px/1 FontAwesome;
+                    font-size: inherit;
+                    text-rendering: auto;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale
+                }
+
+                .glyphicon-chevron-right:before {
+                    content: "\f054";
+                }
+
+                .glyphicon-chevron-left:before {
+                    content: "\f053";
+                }
+            </style>
             @RenderBody()
         </main>
     </div>

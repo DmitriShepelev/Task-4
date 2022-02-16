@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Task_4.DAL.Models.Client>
+@{
+    ViewData["Title"] = "Список клиентов";
+}
+<div class="text-center">
+    <h1 class="display-4">Список клиентов</h1>
+</div>
+<br />
+
+<table class="table">
+    @foreach (var client in Model)
+    {
+        <tr>
+            <td><a asp-controller="Clients" asp-action="Index" asp-route-clientId="@client.Id">@client.LastName</a></td>
+        </tr>
+    }
+</table>

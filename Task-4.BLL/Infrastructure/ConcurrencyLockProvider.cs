@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Task_4.Models;
+using Task_4.DAL.Models;
 
 namespace Task_4.BLL.Infrastructure
 {

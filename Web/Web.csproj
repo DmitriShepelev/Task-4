@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -18,17 +18,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="WebMatrix.WebData" Version="2.0.30506" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceClient\Task-4.Service.csproj" />
     <ProjectReference Include="..\Task-4.BLL\Task-4.BLL.csproj" />
     <ProjectReference Include="..\Task-4.DAL\Task-4.DAL.csproj" />
-    <ProjectReference Include="..\Task-4\Task-4.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Orders\" />
   </ItemGroup>
 
   <ItemGroup>

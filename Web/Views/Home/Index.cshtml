@@ -1,35 +1,60 @@
-﻿@using System.Globalization
-@model AllOrdersViewModel
+﻿@model AllOrdersViewModel
 @{
     ViewData["Title"] = "Список сделок";
-    //Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Список сделок</h1>
-</div>
-<br />
 
-@{await Html.RenderPartialAsync("OrdersPartialView", Model);}
 
-@*<table width="100%">
+<table class="table">
     <tr>
-        <td>Клиент</td>
-        <td>Менеджер</td>
-        <td>Товар</td>
-        <td>Сумма</td>
-        <td>Дата</td>
-        <td></td>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.PurchaseDateSort)">Дата</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.ManagerNameSort)">Менеджер</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.ClientNameSort)">Клиент</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.ProductNameSort)">Товар</a>
+        </th>
+        <th>
+            <a asp-action="Index"
+               asp-route-sortOrder="@(Model.SortViewModel.AmountSort)">Сумма</a>
+        </th>
     </tr>
 
-    @foreach (var order in Model.Orders)
-    {
-    <tr>
-        <td>@order.Client.Name</td>
-        <td>@order.Manager.SecondName</td>
-        <td>@order.Product.Name</td>
-        <td>@order.Amount.ToString(CultureInfo.InvariantCulture)</td>
-        <td>@order.PurchaseDate</td>
-    </tr>
-    }
-</table>*@
+    @{await Html.RenderPartialAsync("OrdersPartialView", Model);}
+
+</table>
+
+<page-link page-model="Model.PageViewModel" page-action="Index"
+           page-url-sortOrder="@(Model.SortViewModel.Current)"></page-link>
+
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+       asp-route-sortOrder="@(Model.SortViewModel.Current)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+       asp-route-sortOrder="@(Model.SortViewModel.Current)"
+       class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-right"></i>
+        Вперед
+    </a>
+}
+

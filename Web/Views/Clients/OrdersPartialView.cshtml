@@ -1,24 +1,15 @@
-﻿@using System.Globalization
-@model ClientOrdersViewModel
+﻿@model ClientOrdersViewModel
 
-<table width="100%">
-    <tr>
-        <td>Дата</td>
-        <td>Менеджер</td>
-        <td>Клиент</td>
-        <td>Товар</td>
-        <td>Сумма</td>
-        <td></td>
-    </tr>
-
+<table class="table">
     @foreach (var order in Model.Orders)
     {
         <tr>
             <td>@order.PurchaseDate</td>
             <td>@order.Manager.SecondName</td>
-            <td>@order.Client.Name</td>
+            <td>@order.Client.LastName</td>
             <td>@order.Product.Name</td>
-            <td>@order.Amount.ToString(CultureInfo.InvariantCulture)</td>
+            <td>@order.Amount</td>
+            <td><a asp-controller="Managers" asp-action="EditOrder" asp-route-orderId="@order.Id" class="btn btn-outline-dark">Редактировать</a></td>
         </tr>
     }
 </table>
